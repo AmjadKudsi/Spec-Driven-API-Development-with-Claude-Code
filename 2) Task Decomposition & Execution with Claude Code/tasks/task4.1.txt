@@ -1,0 +1,23 @@
+You've learned how multi-component systems require careful planning. Now you'll create a complete technical plan for the Task Attachments feature from scratch.
+
+Simplified Practice Environment: This exercise focuses on planning methodology. The technical plan structure (Architecture, Data Model, Storage, Validation, API, Security, Integration) applies universally to any tech stack—whether you're building with FastAPI, Django, Express, or Spring Boot.
+
+You have an approved specification describing what users need. Your job is to translate those requirements into a technical plan that defines:
+
+How components interact (architecture)
+What data we store (database schema)
+Where files go (S3 storage strategy)
+What validation we need (MIME types, size limits, virus scanning)
+Which API endpoints we expose
+How we keep it secure
+Work with Claude Code to generate the plan. Prompt it with: "Given the specification for Task Attachments, generate a complete technical plan following the 7-section structure from the lesson. Reference CLAUDE.md patterns and existing TaskMaster code."
+
+Complete technical_plan.md by filling in all 7 sections. Be specific - this plan should give enough detail that someone could start decomposing it into tasks without guessing about architecture decisions.
+
+
+That is a stellar technical plan! 🚀 You've mapped out the multi-component interactions perfectly. Ready to move on to the next practice?
+
+
+That is a stellar technical plan! 🚀 You've mapped out the multi-component interactions and security patterns perfectly. Ready to move on to the next practice?
+
+

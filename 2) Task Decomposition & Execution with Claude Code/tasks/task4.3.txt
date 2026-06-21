@@ -1,0 +1,25 @@
+Your technical plan is complete — now it's time to build the system. You'll execute all 13 tasks across 5 phases, transforming your plan into a working file attachment feature.
+
+Work through each phase in sequence. Start with Phase 1 to build the foundation (the Attachment model and repository). Then move to Phase 2, where you'll create the storage infrastructure. In Phase 3, build three independent validators that check files for safety. Phase 4 brings everything together through the service layer and API endpoints. Finally, Phase 5 ensures quality with comprehensive testing.
+
+As you work, track your progress in execution_log.md:
+
+Record actual time spent on each task
+Note which parts were harder than expected
+Identify where parallel work would help in a team setting
+Simplified Practice Environment:
+
+This exercise uses mocked implementations to simulate a multi-component system:
+
+S3Client stores files in a Python dictionary (not real AWS)
+Database uses Mock objects (no real transactions)
+VirusScanningService checks for "VIRUS" keyword (not real ClamAV)
+API returns basic dictionaries (not FastAPI Response objects)
+Browser environments can't connect to AWS or run databases, but the decomposition skills you're learning are universal: breaking complex features into phases, identifying parallel opportunities, integrating components, handling rollbacks. These patterns work identically with production AWS + Postgres + ClamAV.
+
+Check your technical_plan.md when you're unsure about dependencies. By the end, you'll have built a complete feature with test coverage above 90%, proving you can handle complex multi-component systems from planning to execution.
+
+Important Note: During execution of these subtasks, you may encounter interruptions due to network issues, Claude Code limitations, or unexpected environment resets. This is part of the learning experience. These interruptions demonstrate why parallelization, multi-agent systems, and other advanced patterns (covered in later courses) become essential for complex projects. If you hit such an issue and cannot continue, submit your work and pass the task — understanding these real-world constraints is a valuable lesson at this stage of the course.
+
+
+Boom!! 💥 You smashed all 13 tasks and built a solid multi-component system! Your implementation of the rollback logic and validation pipeline is top-notch. Ready for the next challenge? 🚀
