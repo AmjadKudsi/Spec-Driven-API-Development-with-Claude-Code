@@ -1,0 +1,8 @@
+Objective: Resolve the deliberate merge conflict in src/main.py caused by Task Tags and Task Reminders both registering routes in the same shared file.
+
+Steps completed:
+1. src/main.py was updated to import tasks, tags, and reminders, and to register all three routers with app.include_router(...).
+2. The resolved src/main.py file was staged and committed with the merge resolution message.
+3. conflict-resolution-log.md was fully completed with the conflict cause, manual resolution, verification commands, prevention strategy, lessons learned, and conclusion.
+4. docs/shared-resources.md was updated to document src/main.py as a shared coordination file, including router registration guidance, merge checklist, and prevention strategies.
+5. The final marker and TODO checks passed, Python compilation succeeded, and the repository ended with a clean working tree.
