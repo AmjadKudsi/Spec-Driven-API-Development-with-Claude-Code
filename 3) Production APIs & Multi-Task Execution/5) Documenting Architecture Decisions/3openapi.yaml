@@ -1,0 +1,514 @@
+openapi: 3.1.0
+info:
+  title: TaskMaster API
+  version: 1.0.0
+  description: Production-ready task management API
+
+paths:
+  /:
+    get:
+      summary: Root
+      operationId: root__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+
+  /api/auth/register:
+    post:
+      tags:
+        - auth
+      summary: Register
+      description: Register a new user account.
+      operationId: register_api_auth_register_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+
+  /api/auth/login:
+    post:
+      tags:
+        - auth
+      summary: Login
+      description: |
+        Login and receive a JWT access token.
+        Token expires in 7 days.
+      operationId: login_api_auth_login_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+
+  /api/auth/me:
+    get:
+      tags:
+        - auth
+      summary: Get Me
+      description: Get current authenticated user information.
+      operationId: get_me_api_auth_me_get
+      security:
+        - HTTPBearer: []
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+
+  /api/tasks:
+    post:
+      tags:
+        - Tasks
+      summary: Create Task
+      operationId: create_task_api_tasks_post
+      security:
+        - HTTPBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+        - Tasks
+      summary: List Tasks
+      operationId: list_tasks_api_tasks_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - $ref: '#/components/schemas/TaskStatus'
+              - type: 'null'
+            title: Status
+        - name: skip
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+            title: Skip
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+            title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskList'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+
+  /api/tasks/{task_id}:
+    get:
+      tags:
+        - Tasks
+      summary: Get Task
+      operationId: get_task_api_tasks__task_id__get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Task Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+        - Tasks
+      summary: Update Task
+      operationId: update_task_api_tasks__task_id__put
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Task Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - Tasks
+      summary: Delete Task
+      operationId: delete_task_api_tasks__task_id__delete
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Task Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+
+components:
+  schemas:
+    HTTPValidationError:
+      type: object
+      title: HTTPValidationError
+      properties:
+        detail:
+          type: array
+          title: Detail
+          items:
+            $ref: '#/components/schemas/ValidationError'
+
+    TaskCreate:
+      type: object
+      title: TaskCreate
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          title: Title
+          minLength: 1
+          maxLength: 200
+        description:
+          title: Description
+          anyOf:
+            - type: string
+              maxLength: 2000
+            - type: 'null'
+      example:
+        title: Complete project documentation
+        description: Write comprehensive API documentation for all endpoints
+
+    TaskList:
+      type: object
+      title: TaskList
+      required:
+        - tasks
+        - total
+        - skip
+        - limit
+      properties:
+        tasks:
+          type: array
+          title: Tasks
+          items:
+            $ref: '#/components/schemas/TaskResponse'
+        total:
+          type: integer
+          title: Total
+        skip:
+          type: integer
+          title: Skip
+        limit:
+          type: integer
+          title: Limit
+
+    TaskResponse:
+      type: object
+      title: TaskResponse
+      required:
+        - id
+        - title
+        - description
+        - status
+        - owner_id
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        title:
+          type: string
+          title: Title
+        description:
+          title: Description
+          anyOf:
+            - type: string
+            - type: 'null'
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+        owner_id:
+          type: string
+          format: uuid
+          title: Owner Id
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      example:
+        id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        title: Complete project documentation
+        description: Write comprehensive API documentation for all endpoints
+        status: in_progress
+        owner_id: 7c9e6679-7425-40de-944b-e07fc1f90ae7
+        created_at: '2024-01-15T10:30:00Z'
+        updated_at: '2024-01-15T14:45:00Z'
+
+    TaskStatus:
+      type: string
+      title: TaskStatus
+      enum:
+        - pending
+        - in_progress
+        - completed
+
+    TaskUpdate:
+      type: object
+      title: TaskUpdate
+      properties:
+        title:
+          title: Title
+          anyOf:
+            - type: string
+              minLength: 1
+              maxLength: 200
+            - type: 'null'
+        description:
+          title: Description
+          anyOf:
+            - type: string
+              maxLength: 2000
+            - type: 'null'
+        status:
+          anyOf:
+            - $ref: '#/components/schemas/TaskStatus'
+            - type: 'null'
+
+    Token:
+      type: object
+      title: Token
+      required:
+        - access_token
+      properties:
+        access_token:
+          type: string
+          title: Access Token
+        token_type:
+          type: string
+          title: Token Type
+          default: Bearer
+        expires_in:
+          type: integer
+          title: Expires In
+          default: 900
+      example:
+        access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3YzllNjY3OS03NDI1LTQwZGUtOTQ0Yi1lMDdmYzFmOTBhZTciLCJleHAiOjE3MDUzMjM2MDB9.abc123def456
+        token_type: Bearer
+        expires_in: 900
+
+    UserCreate:
+      type: object
+      title: UserCreate
+      required:
+        - email
+        - username
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+        username:
+          type: string
+          title: Username
+          minLength: 3
+          maxLength: 50
+          pattern: ^[a-zA-Z0-9_]+$
+        password:
+          type: string
+          title: Password
+          minLength: 8
+      example:
+        email: user@example.com
+        username: johndoe
+        password: SecurePass123
+
+    UserLogin:
+      type: object
+      title: UserLogin
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+        password:
+          type: string
+          title: Password
+      example:
+        email: user@example.com
+        password: SecurePass123
+
+    UserResponse:
+      type: object
+      title: UserResponse
+      required:
+        - id
+        - email
+        - username
+        - is_active
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        email:
+          type: string
+          title: Email
+        username:
+          type: string
+          title: Username
+        is_active:
+          type: boolean
+          title: Is Active
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      example:
+        id: 7c9e6679-7425-40de-944b-e07fc1f90ae7
+        email: user@example.com
+        username: johndoe
+        is_active: true
+        created_at: '2024-01-15T10:00:00Z'
+
+    ValidationError:
+      type: object
+      title: ValidationError
+      required:
+        - loc
+        - msg
+        - type
+      properties:
+        loc:
+          type: array
+          title: Location
+          items:
+            anyOf:
+              - type: string
+              - type: integer
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer
