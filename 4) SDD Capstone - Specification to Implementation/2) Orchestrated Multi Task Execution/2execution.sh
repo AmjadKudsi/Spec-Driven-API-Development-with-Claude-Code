@@ -1,3 +1,5 @@
+# Task: Complete RecipeBox data layer with 3 remaining models, tests, migration, and one minimal API route.
+# Use Claude Code for edits, tests, migration, and final verification.
 
 ╭─── Claude Code v2.0.42 ─────────────────────────────────────────────────────────────────────╮
 │                                    │ Tips for getting started                               │
