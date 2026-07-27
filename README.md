@@ -8,3 +8,6 @@ The project uses RecipeBox as a practical domain for building a recipe managemen
 
 ## Technical areas:
 REST API design, backend service architecture, data modeling, validation, automated testing, iterative implementation, multi step feature delivery, and production style documentation.
+
+# Completion Certificate
+![Certificate](./certificate.png)
